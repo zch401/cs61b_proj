@@ -4,6 +4,7 @@ public class ArrayDeque<T> implements Deque<T> {
     private int nextFirst;
     private int nextLast;
     private int REFACTOR = 2; //resize factor
+    private int cap; //capacity of the array
 
     /**
      * create empty array deque
@@ -11,6 +12,7 @@ public class ArrayDeque<T> implements Deque<T> {
     public ArrayDeque() {
         items = (T[]) new Object[8];
         size = 0;
+        cap = 8;
         nextFirst = 4;
         nextLast = 5;
     }
@@ -28,13 +30,6 @@ public class ArrayDeque<T> implements Deque<T> {
      * @param i: current position
      */
     private int nextL(int i) {
-        /*
-        int next;
-        if (i == items.length - 1) {
-            next = 0;
-        } else {
-            next = i + 1;
-        }*/
         return i == items.length - 1? 0 : i + 1;
     }
 
@@ -45,12 +40,13 @@ public class ArrayDeque<T> implements Deque<T> {
     private void resize(int capacity) {
         T[] temp = (T[]) new Object[capacity];
         int old_size = size;
-        int first = nextF(nextFirst);
+        int first = nextL(nextFirst);
 
         for (int i = 0; i < old_size ; i++ ) {
             temp[i] = items[first];
-            first = nextF(first);
+            first = nextL(first);
         }
+        cap = capacity;
         nextFirst = capacity - 1;
         nextLast = size;
         items = temp;
@@ -61,7 +57,7 @@ public class ArrayDeque<T> implements Deque<T> {
      * @param item: item to add
      */
     @Override
-    public void addFirst(T item) {
+    public synchronized void addFirst(T item) {
         if (size == items.length) {
             resize(size * REFACTOR);
         }
@@ -76,7 +72,7 @@ public class ArrayDeque<T> implements Deque<T> {
      * @param item: item to add
      */
     @Override
-    public void addLast(T item) {
+    public synchronized void addLast(T item) {
         if (size == items.length) {
             resize(size * REFACTOR);
         }
@@ -119,17 +115,16 @@ public class ArrayDeque<T> implements Deque<T> {
      * remove and return the item at front of deque
      */
     @Override
-    public T removeFirst() {
+    public synchronized T removeFirst() {
         /**if first item does not exist*/
         if (size == 0) {
             return null;
         }
 
         //R: array usage
-        double R;
-        R = size / items.length;
+        double R = (double) size / cap;
         if (R < 0.25) {
-            resize(items.length / 2);
+            resize(cap / 2);
         }
 
         int pos = nextL(nextFirst);
@@ -144,17 +139,16 @@ public class ArrayDeque<T> implements Deque<T> {
      * remove and return the item at back of the deque
      */
     @Override
-    public T removeLast() {
+    public synchronized T removeLast() {
         /**if last item does not exist*/
         if (size == 0) {
             return null;
         }
 
         //R: array usage
-        double R;
-        R = size / items.length;
+        double R = (double) size / cap;
         if (R < 0.25) {
-            resize(items.length / 2);
+            resize(cap / 2);
         }
 
         int pos = nextF(nextLast);

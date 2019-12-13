@@ -110,6 +110,23 @@ public class ArrayDequeTest {
         assertEquals(actual, expect);
     }
 
+    @Test
+    /**
+     * test bug for resize
+     */
+    public void resizeBugTest() {
+        ArrayDeque<Integer> ad1 = new ArrayDeque<Integer>();
+        for (int i = 0; i < 16; i++) {
+            ad1.addFirst(i);
+        }
+        for (int i = 0; i < 14; i++) {
+            ad1.removeLast();
+        }
+        int actual = ad1.get(0);
+        int expect = 15;
+        assertEquals(actual, expect);
+    }
+
     public static void main(String[] args) {
         System.out.println("Running tests.\n");
         addIsEmptySizeTest();

@@ -91,7 +91,7 @@ public class LinkedListDequeTest {
 	/**
 	 * test the case of removing item from empty list
 	 */
-	public static void removeEmptyTest() {
+	public void removeEmptyTest() {
 		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
 		Integer actual = lld1.removeFirst();
 		Integer expected = null;
@@ -102,7 +102,7 @@ public class LinkedListDequeTest {
 	/**
 	 * test add last method
 	 */
-	public static void addRemoveLastTest() {
+	public void addRemoveLastTest() {
 		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
 		lld1.addLast(10);
 		int actual = lld1.removeLast();
@@ -114,7 +114,7 @@ public class LinkedListDequeTest {
 	/**
 	 * test get method
 	 */
-	public static void getTest() {
+	public void getTest() {
 		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
 		lld1.addLast(10);
 		lld1.addFirst(20);
@@ -123,12 +123,25 @@ public class LinkedListDequeTest {
 		assertEquals(actual, expected);
 	}
 
+	@Test
+	/**
+	 * test bug for remove
+	 */
+	public void removeBugTest() {
+		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+		lld1.addFirst(1);
+		lld1.addLast(2);
+		lld1.removeFirst();
+		lld1.removeLast();
+		lld1.addFirst(3);
+		int expected = lld1.get(0);
+		int actual = lld1.removeLast();
+		assertEquals(expected, actual);
+	}
+
 	public static void main(String[] args) {
 		System.out.println("Running tests.\n");
 		addIsEmptySizeTest();
 		addRemoveTest();
-		removeEmptyTest();
-		getTest();
-		addRemoveLastTest();
 	}
 }
