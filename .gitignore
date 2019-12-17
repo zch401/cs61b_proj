@@ -80,5 +80,6 @@ hs_err_pid*
 *.ipr
 # IntelliJ
 out/
+.idea/
 # jacoco plugin
 target/
