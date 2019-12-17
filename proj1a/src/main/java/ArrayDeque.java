@@ -9,6 +9,7 @@ public class ArrayDeque<T> implements Deque<T> {
     /**
      * create empty array deque
      */
+    @SuppressWarnings("unchecked")
     public ArrayDeque() {
         items = (T[]) new Object[8];
         size = 0;
@@ -37,6 +38,7 @@ public class ArrayDeque<T> implements Deque<T> {
      * resize array, create a larger one
      * @param capacity: new size for the array
      */
+    @SuppressWarnings("unchecked")
     private void resize(int capacity) {
         T[] temp = (T[]) new Object[capacity];
         int old_size = size;
@@ -116,7 +118,7 @@ public class ArrayDeque<T> implements Deque<T> {
      */
     @Override
     public synchronized T removeFirst() {
-        /**if first item does not exist*/
+        //if first item does not exist
         if (size == 0) {
             return null;
         }
@@ -140,7 +142,7 @@ public class ArrayDeque<T> implements Deque<T> {
      */
     @Override
     public synchronized T removeLast() {
-        /**if last item does not exist*/
+        //if last item does not exist
         if (size == 0) {
             return null;
         }
@@ -165,7 +167,7 @@ public class ArrayDeque<T> implements Deque<T> {
      */
     @Override
     public T get(int index) {
-        /**if the index does not exist*/
+        //if the index does not exist
         if (index >= size || index < 0) {
             return null;
         }
@@ -184,14 +186,17 @@ public class ArrayDeque<T> implements Deque<T> {
      * create a deep copy
      * @param other: the ArrayDeque to copy
      */
-    public ArrayDeque(ArrayDeque other) {
+    @SuppressWarnings("unchecked")
+    public ArrayDeque(ArrayDeque<T> other) {
         items = (T[]) new Object[other.items.length];
+        cap = items.length;
+        REFACTOR = other.REFACTOR;
         size = 0;
         nextFirst = 4;
         nextLast = 5;
 
         for (int i = 0; i < other.size ; i++ ) {
-             addFirst((T) other.get(i));
+             addFirst(other.get(i));
         }
     }
 }

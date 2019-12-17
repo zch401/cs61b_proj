@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArrayDeque.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">proj1a</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">ArrayDeque.java</span></div><h1>ArrayDeque.java</h1><pre class="source lang-java linenums">public class ArrayDeque&lt;T&gt; implements Deque&lt;T&gt; {
+    private T[] items;
+    private int size;
+    private int nextFirst;
+    private int nextLast;
+<span class="fc" id="L6">    private int REFACTOR = 2; //resize factor</span>
+    private int cap; //capacity of the array
+
+    /**
+     * create empty array deque
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L13">    public ArrayDeque() {</span>
+<span class="fc" id="L14">        items = (T[]) new Object[8];</span>
+<span class="fc" id="L15">        size = 0;</span>
+<span class="fc" id="L16">        cap = 8;</span>
+<span class="fc" id="L17">        nextFirst = 4;</span>
+<span class="fc" id="L18">        nextLast = 5;</span>
+<span class="fc" id="L19">    }</span>
+
+    /**
+     * calculate nextFirst
+     * @param i: current position
+     */
+    private int nextF(int i) {
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        return i == 0? items.length - 1 : i -1;</span>
+    }
+
+    /**
+     * calculate nextLast
+     * @param i: current position
+     */
+    private int nextL(int i) {
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        return i == items.length - 1? 0 : i + 1;</span>
+    }
+
+    /**
+     * resize array, create a larger one
+     * @param capacity: new size for the array
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    private void resize(int capacity) {
+<span class="fc" id="L43">        T[] temp = (T[]) new Object[capacity];</span>
+<span class="fc" id="L44">        int old_size = size;</span>
+<span class="fc" id="L45">        int first = nextL(nextFirst);</span>
+
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        for (int i = 0; i &lt; old_size ; i++ ) {</span>
+<span class="fc" id="L48">            temp[i] = items[first];</span>
+<span class="fc" id="L49">            first = nextL(first);</span>
+        }
+<span class="fc" id="L51">        cap = capacity;</span>
+<span class="fc" id="L52">        nextFirst = capacity - 1;</span>
+<span class="fc" id="L53">        nextLast = size;</span>
+<span class="fc" id="L54">        items = temp;</span>
+<span class="fc" id="L55">    }</span>
+
+    /**
+     * add item to the front of the deque
+     * @param item: item to add
+     */
+    @Override
+    public synchronized void addFirst(T item) {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (size == items.length) {</span>
+<span class="fc" id="L64">            resize(size * REFACTOR);</span>
+        }
+<span class="fc" id="L66">        items[nextFirst] = item;</span>
+<span class="fc" id="L67">        size = size + 1;</span>
+
+<span class="fc" id="L69">        nextFirst = nextF(nextFirst);</span>
+<span class="fc" id="L70">    }</span>
+
+    /**
+     * add item to the back of deque
+     * @param item: item to add
+     */
+    @Override
+    public synchronized void addLast(T item) {
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (size == items.length) {</span>
+<span class="fc" id="L79">            resize(size * REFACTOR);</span>
+        }
+<span class="fc" id="L81">        items[nextLast] = item;</span>
+<span class="fc" id="L82">        size = size + 1;</span>
+
+<span class="fc" id="L84">        nextLast = nextL(nextLast);</span>
+<span class="fc" id="L85">    }</span>
+
+    /**
+     * if deque is empty
+     */
+    @Override
+    public boolean isEmpty() {
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        return size == 0;</span>
+    }
+
+    /**
+     * number of items in deque
+     */
+    @Override
+    public int size() {
+<span class="fc" id="L100">        return size;</span>
+    }
+
+    /**
+     * print item in the deque from first to last
+     */
+    @Override
+    public void printDeque() {
+<span class="fc" id="L108">        int pos = nextL(nextFirst);</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        while (pos != nextLast) {</span>
+<span class="fc" id="L110">            System.out.print(items[pos] + &quot; &quot;);</span>
+<span class="fc" id="L111">            pos = nextL(pos);</span>
+        }
+<span class="fc" id="L113">        System.out.println();</span>
+<span class="fc" id="L114">    }</span>
+
+    /**
+     * remove and return the item at front of deque
+     */
+    @Override
+    public synchronized T removeFirst() {
+        //if first item does not exist
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (size == 0) {</span>
+<span class="fc" id="L123">            return null;</span>
+        }
+
+        //R: array usage
+<span class="fc" id="L127">        double R = (double) size / cap;</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (R &lt; 0.25) {</span>
+<span class="fc" id="L129">            resize(cap / 2);</span>
+        }
+
+<span class="fc" id="L132">        int pos = nextL(nextFirst);</span>
+<span class="fc" id="L133">        T result = items[pos];</span>
+<span class="fc" id="L134">        items[pos] = null;</span>
+<span class="fc" id="L135">        size =  size - 1;</span>
+<span class="fc" id="L136">        nextFirst = pos;</span>
+<span class="fc" id="L137">        return result;</span>
+    }
+
+    /**
+     * remove and return the item at back of the deque
+     */
+    @Override
+    public synchronized T removeLast() {
+        //if last item does not exist
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        if (size == 0) {</span>
+<span class="fc" id="L147">            return null;</span>
+        }
+
+        //R: array usage
+<span class="fc" id="L151">        double R = (double) size / cap;</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        if (R &lt; 0.25) {</span>
+<span class="fc" id="L153">            resize(cap / 2);</span>
+        }
+
+<span class="fc" id="L156">        int pos = nextF(nextLast);</span>
+<span class="fc" id="L157">        T result = items[pos];</span>
+<span class="fc" id="L158">        items[pos] = null;</span>
+<span class="fc" id="L159">        size =  size - 1;</span>
+<span class="fc" id="L160">        nextLast = pos;</span>
+<span class="fc" id="L161">        return result;</span>
+    }
+
+    /**
+     * get item at given index
+     * @param index: index of the item to get
+     */
+    @Override
+    public T get(int index) {
+        //if the index does not exist
+<span class="fc bfc" id="L171" title="All 4 branches covered.">        if (index &gt;= size || index &lt; 0) {</span>
+<span class="fc" id="L172">            return null;</span>
+        }
+
+<span class="fc" id="L175">        int pos = nextFirst;</span>
+
+<span class="fc" id="L177">        pos = nextL(pos) + index;</span>
+
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        if (pos &gt;= items.length ) {</span>
+<span class="fc" id="L180">            pos = pos - items.length;</span>
+        }
+<span class="fc" id="L182">        return items[pos];</span>
+    }
+
+    /**
+     * create a deep copy
+     * @param other: the ArrayDeque to copy
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L190">    public ArrayDeque(ArrayDeque&lt;T&gt; other) {</span>
+<span class="fc" id="L191">        items = (T[]) new Object[other.items.length];</span>
+<span class="fc" id="L192">        cap = items.length;</span>
+<span class="fc" id="L193">        REFACTOR = other.REFACTOR;</span>
+<span class="fc" id="L194">        size = 0;</span>
+<span class="fc" id="L195">        nextFirst = 4;</span>
+<span class="fc" id="L196">        nextLast = 5;</span>
+
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        for (int i = 0; i &lt; other.size ; i++ ) {</span>
+<span class="fc" id="L199">             addFirst(other.get(i));</span>
+        }
+<span class="fc" id="L201">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

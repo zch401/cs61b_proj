@@ -137,10 +137,11 @@ public class LinkedListDeque<T> implements Deque<T> {
      * create a deep copy of other
      * @param other: the LinkedListDeque to copy
      */
-    public LinkedListDeque(LinkedListDeque other) {
+    public LinkedListDeque (LinkedListDeque<T> other) {
         this();
+        this.sentinel = other.sentinel;
         for (int i = 0; i < other.size() ; i++ ) {
-            addLast((T) other.get(i));
+            addLast(other.get(i));
         }
     }
 

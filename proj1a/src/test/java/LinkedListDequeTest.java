@@ -40,7 +40,7 @@ public class LinkedListDequeTest {
 		System.out.println("Running add/isEmpty/Size test.");
 		System.out.println("Make sure to uncomment the lines below (and delete this print statement).");
 
-		LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
+		LinkedListDeque<String> lld1 = new LinkedListDeque<>();
 
 		boolean passed = checkEmpty(true, lld1.isEmpty());
 
@@ -71,7 +71,7 @@ public class LinkedListDequeTest {
 
 		System.out.println("Make sure to uncomment the lines below (and delete this print statement).");
 
-		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+		LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
 		// should be empty
 		boolean passed = checkEmpty(true, lld1.isEmpty());
 
@@ -87,53 +87,63 @@ public class LinkedListDequeTest {
 		
 	}
 
-	@Test
 	/**
 	 * test the case of removing item from empty list
 	 */
+	@Test
 	public void removeEmptyTest() {
-		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+		LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
 		Integer actual = lld1.removeFirst();
 		Integer expected = null;
 		assertEquals(actual, expected);
 	}
 
-	@Test
 	/**
 	 * test add last method
 	 */
+	@Test
 	public void addRemoveLastTest() {
-		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+		LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+		assertEquals(null, lld1.removeLast());
+		assertEquals(0, lld1.size());
 		lld1.addLast(10);
 		int actual = lld1.removeLast();
 		int expected = 10;
 		assertEquals(actual, expected);
 	}
 
-	@Test
 	/**
 	 * test get method
 	 */
+	@Test
 	public void getTest() {
-		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+		LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
 		lld1.addLast(10);
 		lld1.addFirst(20);
-		int actual = lld1.get(0);
+		assertTrue(lld1.get(1).equals(10));
+		assertTrue(lld1.getRecursive(1).equals(10));
+		assertEquals(null, lld1.get(-1));
+		assertEquals(null, lld1.get(20));
+		assertEquals(null, lld1.getRecursive(-1));
+		assertEquals(null, lld1.getRecursive(20));
+		LinkedListDeque<Integer> lld2 = new LinkedListDeque<>(lld1);
+		int actual = lld2.get(0);
 		int expected = 20;
 		assertEquals(actual, expected);
 	}
 
-	@Test
 	/**
 	 * test bug for remove
 	 */
+	@Test
 	public void removeBugTest() {
-		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+		LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
 		lld1.addFirst(1);
 		lld1.addLast(2);
 		lld1.removeFirst();
 		lld1.removeLast();
 		lld1.addFirst(3);
+		lld1.printDeque();
 		int expected = lld1.get(0);
 		int actual = lld1.removeLast();
 		assertEquals(expected, actual);

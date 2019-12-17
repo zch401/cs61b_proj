@@ -39,7 +39,7 @@ public class ArrayDequeTest {
         System.out.println("Running add/isEmpty/Size test.");
         System.out.println("Make sure to uncomment the lines below (and delete this print statement).");
 
-        ArrayDeque<String> lld1 = new ArrayDeque<String>();
+        ArrayDeque<String> lld1 = new ArrayDeque<>();
 
         boolean passed = checkEmpty(true, lld1.isEmpty());
 
@@ -70,7 +70,7 @@ public class ArrayDequeTest {
 
         System.out.println("Make sure to uncomment the lines below (and delete this print statement).");
 
-        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
         // should be empty
         boolean passed = checkEmpty(true, lld1.isEmpty());
 
@@ -88,7 +88,7 @@ public class ArrayDequeTest {
 
     @Test
     public void getTest() {
-        ArrayDeque<Integer> ad1 = new ArrayDeque<Integer>();
+        ArrayDeque<Integer> ad1 = new ArrayDeque<>();
         ad1.addFirst(10);
         ad1.addLast(5);
         Integer expected = null;
@@ -96,12 +96,12 @@ public class ArrayDequeTest {
         assertEquals(expected, actual);
     }
 
-    @Test
     /**
      * test for resize
      */
+    @Test
     public void resizeTest() {
-        ArrayDeque<Integer> ad1 = new ArrayDeque<Integer>();
+        ArrayDeque<Integer> ad1 = new ArrayDeque<>();
         for (int i = 0; i < 1000; i++) {
             ad1.addLast(i);
         }
@@ -110,20 +110,30 @@ public class ArrayDequeTest {
         assertEquals(actual, expect);
     }
 
-    @Test
     /**
      * test bug for resize
      */
+    @Test
     public void resizeBugTest() {
-        ArrayDeque<Integer> ad1 = new ArrayDeque<Integer>();
+        ArrayDeque<Integer> ad1 = new ArrayDeque<>();
+        assertEquals(null, ad1.removeLast());
+        assertEquals(null, ad1.removeFirst());
+        assertTrue(ad1.isEmpty());
         for (int i = 0; i < 16; i++) {
             ad1.addFirst(i);
         }
+        assertTrue(ad1.get(15).equals(0));
+        assertFalse(ad1.isEmpty());
+        ArrayDeque<Integer> ad2 = new ArrayDeque<>(ad1);
         for (int i = 0; i < 14; i++) {
             ad1.removeLast();
+            ad2.removeFirst();
         }
-        int actual = ad1.get(0);
-        int expect = 15;
+        assertEquals(null, ad1.get(-5));
+        assertEquals(null, ad1.get(8));
+        ad1.printDeque();
+        int actual = ad1.get(1);
+        int expect = 14;
         assertEquals(actual, expect);
     }
 

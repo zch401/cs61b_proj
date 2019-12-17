@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LinkedListDeque.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">proj1a</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">LinkedListDeque.java</span></div><h1>LinkedListDeque.java</h1><pre class="source lang-java linenums">public class LinkedListDeque&lt;T&gt; implements Deque&lt;T&gt; {
+    private class LLDNode {
+        LLDNode prev;
+        T item;
+        LLDNode next;
+
+<span class="fc" id="L7">        public LLDNode(LLDNode front, T n, LLDNode back) {</span>
+<span class="fc" id="L8">            prev = front;</span>
+<span class="fc" id="L9">            item = n;</span>
+<span class="fc" id="L10">            next = back;</span>
+<span class="fc" id="L11">        }</span>
+    }
+
+    private LLDNode sentinel;
+    private int size;
+
+    /**
+     * create empty linked list deque
+     */
+<span class="fc" id="L20">    public LinkedListDeque() {</span>
+<span class="fc" id="L21">        sentinel = new LLDNode (null, null, null);</span>
+<span class="fc" id="L22">        sentinel.prev = sentinel;</span>
+<span class="fc" id="L23">        sentinel.next = sentinel;</span>
+<span class="fc" id="L24">        size = 0;</span>
+<span class="fc" id="L25">    }</span>
+
+    /**
+     * add item to front of the deque
+     * @param item: item to add
+     */
+    @Override
+    public synchronized void addFirst(T item) {
+<span class="fc" id="L33">        LLDNode temp = new LLDNode(sentinel, item, sentinel.next);</span>
+<span class="fc" id="L34">        sentinel.next.prev = temp;</span>
+<span class="fc" id="L35">        sentinel.next = temp;</span>
+<span class="fc" id="L36">        size = size + 1;</span>
+<span class="fc" id="L37">    }</span>
+
+    /**
+     * add item to back of the deque
+     * @param item: item to add
+     */
+    @Override
+    public synchronized void addLast(T item) {
+<span class="fc" id="L45">        LLDNode temp = new LLDNode(sentinel.prev, item, sentinel);</span>
+<span class="fc" id="L46">        sentinel.prev.next = temp;</span>
+<span class="fc" id="L47">        sentinel.prev = temp;</span>
+<span class="fc" id="L48">        size = size + 1;</span>
+<span class="fc" id="L49">    }</span>
+
+    /**
+     * return if deque is empty
+     */
+    @Override
+    public boolean isEmpty() {
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        return size == 0;</span>
+    }
+
+    /**
+     * number of items in the deque
+     */
+    @Override
+    public int size() {
+<span class="fc" id="L64">        return size;</span>
+    }
+
+    /**
+     * print items in the deque
+     */
+    @Override
+    public void printDeque() {
+<span class="fc" id="L72">        LLDNode p = sentinel.next;</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        while (p != sentinel) {</span>
+<span class="fc" id="L74">            System.out.print(p.item + &quot; &quot;);</span>
+<span class="fc" id="L75">            p = p.next;</span>
+        }
+<span class="fc" id="L77">        System.out.println();</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * remove and return item at front of deque
+     */
+    @Override
+    public synchronized T removeFirst() {
+        //if no first item
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (isEmpty()) {</span>
+<span class="fc" id="L87">            return null;</span>
+        }
+
+<span class="fc" id="L90">        T result = sentinel.next.item;</span>
+<span class="fc" id="L91">        LLDNode target = sentinel.next.next;</span>
+<span class="fc" id="L92">        sentinel.next = target;</span>
+<span class="fc" id="L93">        target.prev = sentinel;</span>
+<span class="fc" id="L94">        size = size - 1;</span>
+<span class="fc" id="L95">        return result;</span>
+    }
+
+    /**
+     * remove and return the item at back of the deque
+     */
+    @Override
+    public synchronized T removeLast() {
+        //if no last item
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (isEmpty()) {</span>
+<span class="fc" id="L105">            return null;</span>
+        }
+
+<span class="fc" id="L108">        T result = sentinel.prev.item;</span>
+<span class="fc" id="L109">        LLDNode target = sentinel.prev.prev;</span>
+<span class="fc" id="L110">        sentinel.prev = target;</span>
+<span class="fc" id="L111">        target.next = sentinel;</span>
+<span class="fc" id="L112">        size = size - 1;</span>
+<span class="fc" id="L113">        return result;</span>
+    }
+
+    /**
+     * get item at given index with iteration
+     * @param index: the index of item to get
+     */
+    @Override
+    public T get(int index) {
+        //if index item does not exist
+<span class="fc bfc" id="L123" title="All 4 branches covered.">        if (index &gt; size - 1 || index &lt; 0) {</span>
+<span class="fc" id="L124">            return null;</span>
+        }
+
+<span class="fc" id="L127">        int num = 0;</span>
+<span class="fc" id="L128">        LLDNode p = sentinel.next;</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        while (num != index) {</span>
+<span class="fc" id="L130">            p = p.next;</span>
+<span class="fc" id="L131">            num++;</span>
+        }
+<span class="fc" id="L133">        return p.item;</span>
+    }
+
+    /**
+     * create a deep copy of other
+     * @param other: the LinkedListDeque to copy
+     */
+    public LinkedListDeque (LinkedListDeque&lt;T&gt; other) {
+<span class="fc" id="L141">        this();</span>
+<span class="fc" id="L142">        this.sentinel = other.sentinel;</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        for (int i = 0; i &lt; other.size() ; i++ ) {</span>
+<span class="fc" id="L144">            addLast(other.get(i));</span>
+        }
+<span class="fc" id="L146">    }</span>
+
+    /**
+     * get item at given index with recursion
+     * @param index: the index of item to get
+     */
+    public T getRecursive(int index) {
+        //if index item does not exist
+<span class="fc bfc" id="L154" title="All 4 branches covered.">        if (index &gt; size - 1 || index &lt; 0) {</span>
+<span class="fc" id="L155">            return null;</span>
+        }
+
+<span class="fc" id="L158">        return getHelper(sentinel.next, index);</span>
+    }
+
+    /**
+     * helper program to get item
+     * @param node: current node
+     * @param index: index of the current node
+     */
+    public T getHelper(LLDNode node, int index) {
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        if (index == 0) {</span>
+<span class="fc" id="L168">            return node.item;</span>
+        }
+
+<span class="fc" id="L171">        return getHelper(node.next, index - 1);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
