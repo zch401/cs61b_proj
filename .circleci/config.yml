@@ -42,3 +42,12 @@ jobs:
       #store test results
       - store_artifacts:
           path:  proj1a/target
+
+workflows:
+  version: 2
+  main:
+    jobs:
+    - build:
+        filters:
+          branches:
+            only: proj1a
