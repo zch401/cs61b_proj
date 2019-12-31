@@ -37,7 +37,7 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "proj1b/pom.xml" }}
 
-      # run tests!
+      # run tests
       - run: cd proj1b && mvn integration-test
       #store test results
       - store_artifacts:
