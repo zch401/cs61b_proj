@@ -26,16 +26,16 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "proj1a/pom.xml" }}
+            - v1-dependencies-{{ checksum "proj1b/pom.xml" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: cd proj1a && mvn dependency:go-offline
+      - run: cd proj1b && mvn dependency:go-offline
 
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies-{{ checksum "proj1a/pom.xml" }}
+          key: v1-dependencies-{{ checksum "proj1b/pom.xml" }}
 
       # run tests!
       - run: cd proj1b && mvn integration-test
