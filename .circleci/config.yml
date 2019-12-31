@@ -38,10 +38,10 @@ jobs:
           key: v1-dependencies-{{ checksum "proj1a/pom.xml" }}
 
       # run tests!
-      - run: cd proj1a && mvn integration-test
+      - run: cd proj1b && mvn integration-test
       #store test results
       - store_artifacts:
-          path:  proj1a/target
+          path:  proj1b/target
 
 workflows:
   version: 2
@@ -50,4 +50,4 @@ workflows:
     - build:
         filters:
           branches:
-            only: proj1a
+            only: proj1b
